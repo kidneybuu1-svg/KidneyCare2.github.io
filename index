@@ -41,7 +41,7 @@
     </div>
 
     <script>
-        const MY_LIFF_ID = "2009546368-mX5qNfbN"; // ใส่ LIFF ID ของคุณ
+        const MY_LIFF_ID = "2009579362-6K3rVkg4"; // ใส่ LIFF ID ของคุณ
         let userId = "";
 
         async function initApp() {
