@@ -7,17 +7,16 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Kanit', sans-serif; background-color: #f4f7f6; }
-    </style>
+    <style>body { font-family: 'Kanit', sans-serif; }</style>
 </head>
-<body class="p-4">
+<body class="p-4 bg-slate-50">
+    <!-- ลบ class hidden ออกเพื่อให้หน้าเว็บแสดงผลทันทีแม้ LIFF จะโหลดช้า -->
     <div id="mainApp" class="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-6 mt-4">
         <h1 class="text-2xl font-bold text-center text-cyan-700 mb-6">ประเมินอาการประจำวัน</h1>
         
         <div class="mb-4">
             <label class="block text-gray-700 font-bold mb-2">ชื่อผู้ป่วย</label>
-            <input type="text" id="userName" class="w-full border-2 border-gray-100 p-3 rounded-xl bg-gray-50" readonly>
+            <input type="text" id="userName" class="w-full border-2 border-gray-100 p-3 rounded-xl bg-gray-50" placeholder="กำลังโหลดชื่อ...">
         </div>
 
         <div class="mb-4">
@@ -36,12 +35,16 @@
         </div>
 
         <button id="btnSubmit" onclick="saveData()" class="w-full bg-cyan-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg active:scale-95 transition-all">
-            💾 บันทึกและแจ้งเตือนเข้า LINE
+            💾 บันทึกและส่งรายงาน
         </button>
     </div>
 
     <script>
-        const MY_LIFF_ID = "2009579362-6K3rVkg4"; // ใส่ LIFF ID ของคุณ
+        // ใส่ LIFF ID ของคุณ
+        const MY_LIFF_ID = "2009579362-6K3rVkg4"; 
+        // ใส่ URL ของ Google Apps Script (ที่ได้จากการ Deploy Web App) **แบบเต็มๆ**
+        const GAS_WEB_APP_URL = "/script.google.com/macros/s/AKfycbwzPahEAn4wbvvXJto1OGFlbBvt3Ws980dmokdeeoeF8JN0iVkKqlVfjqTAc19pybg/exec";
+
         let userId = "";
 
         async function initApp() {
@@ -90,18 +93,19 @@
             };
 
             try {
-                // ส่งข้อมูลไปที่ doPost ของ Apps Script
-                const response = await fetch(window.location.href.replace(/\/exec.*$/, "/exec"), {
+                // เปลี่ยนไปใช้ URL ตรงๆ ของ Google Script
+                const response = await fetch(GAS_WEB_APP_URL, {
                     method: 'POST',
+                    mode: 'no-cors', // เพิ่มโหมดนี้เพื่อป้องกันปัญหา CORS
                     body: JSON.stringify(data)
                 });
 
-                alert("บันทึกและส่งแจ้งเตือนเรียบร้อยแล้ว!");
+                alert("บันทึกเรียบร้อยแล้ว! ข้อมูลจะปรากฏในระบบภายในเวลาครู่เดียว");
                 liff.closeWindow();
             } catch (error) {
-                alert("เกิดข้อผิดพลาดในการเชื่อมต่อ");
+                alert("เกิดข้อผิดพลาดในการเชื่อมต่อ: " + error.message);
                 btn.disabled = false;
-                btn.innerText = "💾 บันทึกและแจ้งเตือนเข้า LINE";
+                btn.innerText = "💾 บันทึกและส่งรายงาน";
             }
         }
     </script>
