@@ -85,7 +85,11 @@
             btn.disabled = true;
             btn.innerText = "⏳ กำลังบันทึก...";
 
+            const now = new Date();
+            const dateString = now.toLocaleString('th-TH');
+
             const data = {
+                date: dateString,
                 userId: userId,
                 userName: document.getElementById('userName').value,
                 symptom: document.getElementById('symptom').value,
